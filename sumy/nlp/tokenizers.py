@@ -5,6 +5,7 @@ from __future__ import division, print_function, unicode_literals
 
 import re
 import nltk
+import kea
 
 from os import path
 from ..utils import expand_resource_path
@@ -39,8 +40,11 @@ class Tokenizer(object):
         return tuple(map(unicode.strip, sentences))
 
     def to_words(self, sentence):
-        words = nltk.word_tokenize(to_unicode(sentence))
-        return tuple(filter(self._is_word, words))
+        if not self.language in ['fr', 'french']:
+            words = nltk.word_tokenize(to_unicode(sentence))
+            return tuple(filter(self._is_word, words))
+        else:
+            return tuple(kea.Tokenizer().tokenize(sentence))
 
     def _is_word(self, word):
         return bool(Tokenizer._WORD_PATTERN.search(word))
