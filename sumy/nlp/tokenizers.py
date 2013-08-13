@@ -1,4 +1,4 @@
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 
 from __future__ import absolute_import
 from __future__ import division, print_function, unicode_literals
@@ -25,11 +25,14 @@ class Tokenizer(object):
         return self._language
 
     def _sentence_tokenizer(self, language):
-        file_path = expand_resource_path("tokenizers/%s.pickle" % language)
-        if not path.exists(file_path):
-            raise ValueError("Sentence tokenizer for language '%s' not available." % language)
+        if not self.language.lower() in ['fr', 'french']:
+            file_path = expand_resource_path("tokenizers/%s.pickle" % language)
+            if not path.exists(file_path):
+                raise ValueError("Sentence tokenizer for language '%s' not available." % language)
 
-        return nltk.data.load(to_string("file:") + file_path)
+            return nltk.data.load(to_string("file:") + file_path)
+        else:
+            return nltk.data.load('tokenizers/punkt/french.pickle')
 
     def to_sentences(self, paragraph):
         sentences = self._sentence_tokenizer.tokenize(to_unicode(paragraph))
